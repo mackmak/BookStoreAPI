@@ -15,9 +15,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
-using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.Logging;
 using BookStoreAPI.Contracts;
+using BookStoreAPI.Models;
+using AutoMapper;
 
 namespace BookStoreAPI
 {
@@ -36,6 +37,12 @@ namespace BookStoreAPI
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddDbContext<BookStoreDbContext>(options => 
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection"))
+                );
+
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             //services.AddRazorPages(); razor pages are not necessary for an API
@@ -47,6 +54,8 @@ namespace BookStoreAPI
                     AllowAnyHeader()
                 );
             });
+
+            //services.AddAutoMapper(typeof(Maps));
 
             services.AddSwaggerGen(controller =>
             {
