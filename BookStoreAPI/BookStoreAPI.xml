@@ -4,6 +4,35 @@
         <name>BookStoreAPI</name>
     </assembly>
     <members>
+        <member name="T:BookStoreAPI.Controllers.AuthorsController">
+            <summary>
+            Interacts with the Authors in th eBook Store database
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.AuthorsController.GetAuthors">
+            <summary>
+            Gets All authors
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.AuthorsController.GetAuthorById(System.Int32)">
+            <summary>
+            Gets author based on requested ID
+            </summary>
+            <param name="id"></param>
+            <returns>author</returns>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.AuthorsController.Create(BookStoreAPI.Models.Author)">
+            <summary>
+            Basic data format:
+            {
+                "firstName": "First Name",
+                "lastName": "Last Name",
+                "bio": "Biography"
+            }
+            </summary>
+            <param name="author"></param>
+            <returns></returns>
+        </member>
         <member name="T:BookStoreAPI.Controllers.HomeController">
             <summary>
             Test API controller

@@ -7,11 +7,14 @@ namespace BookStoreAPI.Models
     {
         public int Id { get; set; }
         [Required]
+        [StringLength(30)]
         public string Title{ get; set; }
         public int? Year { get; set; }
         [Required]
+        [StringLength(20)]
         public string Isbn { get; set; }
         [Required]
+        [StringLength(60)]
         public string Summary { get; set; }
         [Required]
         public string Image { get; set; }
@@ -19,4 +22,5 @@ namespace BookStoreAPI.Models
 
         public virtual Author Author { get; set; }
     }
+
 }

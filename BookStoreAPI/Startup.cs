@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using BookStoreAPI.Contracts;
 using BookStoreAPI.Models;
 using AutoMapper;
+using BookStoreAPI.Services;
 
 namespace BookStoreAPI
 {
@@ -73,6 +74,8 @@ namespace BookStoreAPI
             });
 
             services.AddSingleton<ILoggerService, LoggerService>();
+
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             //AddController should be last in the pipeline
             services.AddControllers();
