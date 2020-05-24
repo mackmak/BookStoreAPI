@@ -9,7 +9,7 @@ namespace BookStoreAPI.Models
 {
     public class BookStoreIdentityDbContext:IdentityDbContext
     {
-        public BookStoreIdentityDbContext(DbContextOptions<BookStoreDbContext>options):base(options)
+        public BookStoreIdentityDbContext(DbContextOptions<BookStoreIdentityDbContext>options):base(options)
         {
 
         }

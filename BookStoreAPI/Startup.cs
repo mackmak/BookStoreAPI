@@ -43,7 +43,8 @@ namespace BookStoreAPI
                     Configuration.GetConnectionString("DefaultConnection"))
                 );
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>() //roles addded to the application
                 .AddEntityFrameworkStores<BookStoreIdentityDbContext>();
             //services.AddRazorPages(); razor pages are not necessary for an API
 
@@ -62,7 +63,7 @@ namespace BookStoreAPI
                 controller.SwaggerDoc("v1", new OpenApiInfo { 
                     Title = "My book store API", 
                     Version = "v1",
-                    Description = "This is an educational API"
+                    Description = "This is a personal Project"
                 });
 
                 //get xml documentation file path
@@ -82,7 +83,10 @@ namespace BookStoreAPI
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, 
+            IWebHostEnvironment env,
+            UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -107,6 +111,8 @@ namespace BookStoreAPI
             //app.UseStaticFiles();
 
             app.UseCors("CorsPolicy");
+
+            SeedData.Seed(userManager, roleManager).Wait();
 
             app.UseRouting();
 
