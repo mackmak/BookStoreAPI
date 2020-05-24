@@ -9,7 +9,7 @@ using BookStoreAPI.Contracts;
 
 namespace BookStoreAPI.Controllers
 {
-    public class Utils:ControllerBase
+    public class Utils : ControllerBase
     {
         public ObjectResult ShowInternalServerError(Exception ex, ILoggerService logger)
         {

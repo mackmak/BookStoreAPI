@@ -31,8 +31,6 @@ namespace BookStoreAPI.Controllers
         /// Gets All authors
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAuthors()
         {
             try
@@ -42,7 +40,7 @@ namespace BookStoreAPI.Controllers
                 var authors = await _authorRepository.FindAll();
 
                 _logger.LogInfo("Authors successfully retrieved");
-                return Accepted(authors);
+                return Accepted("Authors Controller Accepted", authors);
             }
             catch (Exception ex)
             {
@@ -55,16 +53,19 @@ namespace BookStoreAPI.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns>author</returns>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpGet("{id}")] 
         public async Task<IActionResult> GetAuthorById(int id)
         {
             try
             {
 
                 _logger.LogInfo("Get Author By Id requested");
+
+                if(id < 1)
+                {
+                    _logger.LogWarn($"Invalid id {id} provided for Author");
+                    BadRequest($"Invalid id {id} provided for Author");
+                }
 
                 var author = await _authorRepository.FindById(id);
                 if (author == null)
@@ -75,7 +76,7 @@ namespace BookStoreAPI.Controllers
 
                 _logger.LogInfo("Author by id successfully retrieved");
 
-                return Accepted(author);
+                return Accepted("Author by id successfully retrieved", author);
             }
             catch (Exception ex)
             {
@@ -135,7 +136,7 @@ namespace BookStoreAPI.Controllers
         {
             try
             {
-                _logger.LogInfo($"Author id {author.Id} Update requested");
+                _logger.LogInfo($"Author Update requested");
                 if (author == null)
                 {
                     _logger.LogWarn("Empty Author requested");
@@ -164,7 +165,7 @@ namespace BookStoreAPI.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -172,14 +173,8 @@ namespace BookStoreAPI.Controllers
                 _logger.LogInfo($"Author id {id} Delete requested");
                 if(id < 1)
                 {
-                    _logger.LogWarn("Invalid id requested");
-                    return BadRequest("Invalid id requested");
-                }
-
-                if (!ModelState.IsValid)
-                {
-                    _logger.LogError("Invalid Author data");
-                    return BadRequest(ModelState);
+                    _logger.LogWarn($"Invalid ID requested: {id}");
+                    return BadRequest($"Invalid ID requested: {id}");
                 }
 
                 var author = await _authorRepository.FindById(id);
@@ -197,7 +192,7 @@ namespace BookStoreAPI.Controllers
                     return new Utils().ShowInternalServerError("Author Delete failed", _logger);
                 }
 
-                _logger.LogInfo("Author delete successful");
+                _logger.LogInfo($"Author id {id} succcessfully deleted");
 
                 return Accepted("Author Controller Update", author);
                 

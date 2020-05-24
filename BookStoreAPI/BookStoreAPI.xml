@@ -33,6 +33,31 @@
             <param name="author"></param>
             <returns></returns>
         </member>
+        <member name="M:BookStoreAPI.Controllers.BooksController.GetBooks">
+            <summary>
+            Gets All Books
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.BooksController.GetBookById(System.Int32)">
+            <summary>
+            Gets a Book based on provided ID
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.BooksController.Update(BookStoreAPI.Models.Book)">
+            <summary>
+            Updates the provided Book
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.BooksController.Create(BookStoreAPI.Models.Book)">
+            <summary>
+            Inserts the provided Book into the database
+            </summary>
+        </member>
+        <member name="M:BookStoreAPI.Controllers.BooksController.Delete(System.Int32)">
+            <summary>
+            Removes the requested Book from database based on ID
+            </summary>
+        </member>
         <member name="T:BookStoreAPI.Controllers.HomeController">
             <summary>
             Test API controller
