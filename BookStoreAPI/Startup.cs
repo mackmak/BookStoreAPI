@@ -19,6 +19,9 @@ using BookStoreAPI.Contracts;
 using BookStoreAPI.Models;
 using AutoMapper;
 using BookStoreAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace BookStoreAPI
 {
@@ -57,6 +60,22 @@ namespace BookStoreAPI
             });
 
             //services.AddAutoMapper(typeof(Maps));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:issuer"],
+                        ValidAudience = Configuration["Jwt:issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    };
+                });
 
             services.AddSwaggerGen(controller =>
             {
