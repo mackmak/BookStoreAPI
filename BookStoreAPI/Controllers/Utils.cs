@@ -11,6 +11,9 @@ namespace BookStoreAPI.Controllers
 {
     public class Utils : ControllerBase
     {
+
+        public const string strAdmin = "Administrator";
+        public const string strCustomer = "Customer";
         public ObjectResult ShowInternalServerError(Exception ex, ILoggerService logger)
         {
             logger.LogError(ex.Message);

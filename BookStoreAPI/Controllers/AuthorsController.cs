@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BookStoreAPI.Contracts;
 using BookStoreAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,6 +32,7 @@ namespace BookStoreAPI.Controllers
         /// Gets All authors
         /// </summary>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAuthors()
         {
             try
@@ -54,6 +56,7 @@ namespace BookStoreAPI.Controllers
         /// <param name="id"></param>
         /// <returns>author</returns>
         [HttpGet("{id}")] 
+        [AllowAnonymous]
         public async Task<IActionResult> GetAuthorById(int id)
         {
             try
@@ -96,6 +99,7 @@ namespace BookStoreAPI.Controllers
         /// <param name="author"></param>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(Roles = Utils.strAdmin)]
         public async Task<IActionResult> Create([FromBody] Author author)
         {
             try
@@ -132,6 +136,8 @@ namespace BookStoreAPI.Controllers
 
 
         [HttpPut]
+        [Authorize(Roles = Utils.strAdmin)]
+        [Authorize(Roles = Utils.strCustomer)]
         public async Task<IActionResult> Update([FromBody] Author author)
         {
             try
@@ -166,6 +172,7 @@ namespace BookStoreAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Utils.strAdmin)]
         public async Task<IActionResult> Delete(int id)
         {
             try

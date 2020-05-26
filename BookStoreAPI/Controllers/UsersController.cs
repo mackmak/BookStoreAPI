@@ -72,9 +72,11 @@ namespace BookStoreAPI.Controllers
 
         private async Task<string> GenerateJSONWebToken(IdentityUser user)
         {
+            //assiging security key from appsettings.json
             var securityKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
+            //hashing up security key
             var credentials = new SigningCredentials(
                 securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -86,7 +88,7 @@ namespace BookStoreAPI.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
-
+            //retrieving all user roles
             var roles = await _userManager.GetRolesAsync(user);
 
             //adding roles to user info
