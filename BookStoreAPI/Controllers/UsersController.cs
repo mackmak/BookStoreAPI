@@ -23,16 +23,14 @@ namespace BookStoreAPI.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly ILoggerService _logger;
         private readonly IConfiguration _configuration;
 
         public UsersController(SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            ILoggerService logger, IConfiguration configuration)
+            ILoggerService logger, IConfiguration configuration) : base(logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
-            _logger = logger;
             _configuration = configuration;
         }
 
@@ -64,11 +62,11 @@ namespace BookStoreAPI.Controllers
                     _logger.LogError($"{location}: {userDTO.EmailAddress} User registration attempt failed");
 
                     var errorMessage = new StringBuilder();
+
                     foreach (var error in identityResult.Errors)
                     {
                         //_logger.LogError($"{location}: {error.Code} {error.Description}");
-                        ShowInternalServerError($"{location}: {error.Code} {error.Description}",
-                            _logger);
+                        ShowInternalServerError($"{location}: {error.Code} {error.Description}");
 
                         errorMessage.AppendLine($"{location}: {error.Code} {error.Description}");
                     }
@@ -83,7 +81,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -119,7 +117,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 

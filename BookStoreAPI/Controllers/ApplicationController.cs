@@ -12,22 +12,29 @@ namespace BookStoreAPI.Controllers
     public class ApplicationController : ControllerBase
     {
 
-        public const string strAdmin = "Administrator";
-        public const string strCustomer = "Customer";
-        public ObjectResult ShowInternalServerError(Exception ex, ILoggerService logger)
+        protected const string strAdmin = "Administrator";
+        protected const string strCustomer = "Customer";
+        protected readonly ILoggerService _logger;
+
+        public ApplicationController(ILoggerService logger)
         {
-            logger.LogError(ex.Message);
+            _logger = logger;
+        }
+
+        public ObjectResult ShowInternalServerError(Exception ex)
+        {
+            _logger.LogError(ex.Message);
 
             if (ex.InnerException != null)
-                logger.LogError($"Inner Exception: {ex.InnerException}");
+                _logger.LogError($"Inner Exception: {ex.InnerException}");
 
             var errorMsg = "Something went wrong, please contact the administrator.";
             return StatusCode(StatusCodes.Status500InternalServerError, errorMsg);
         }
 
-        public ObjectResult ShowInternalServerError(string message, ILoggerService logger)
+        public ObjectResult ShowInternalServerError(string message)
         {
-            logger.LogError(message);
+            _logger.LogError(message);
 
             return StatusCode(StatusCodes.Status500InternalServerError, message);
         }

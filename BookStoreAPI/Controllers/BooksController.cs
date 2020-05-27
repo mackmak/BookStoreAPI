@@ -14,12 +14,11 @@ namespace BookStoreAPI.Controllers
     public class BooksController : ApplicationController
     {
         private readonly IBookRepository _bookRepository;
-        private readonly ILoggerService _logger;
 
-        public BooksController(IBookRepository bookRepository, ILoggerService logger)
+        public BooksController(IBookRepository bookRepository, 
+            ILoggerService logger) : base(logger)
         {
             _bookRepository = bookRepository;
-            _logger = logger;
         }
 
 
@@ -41,7 +40,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -76,7 +75,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -106,7 +105,7 @@ namespace BookStoreAPI.Controllers
 
                 if (!isUpdateSuccessful)
                 {
-                    return ShowInternalServerError("Book update failed", _logger);
+                    return ShowInternalServerError("Book update failed");
                 }
 
                 _logger.LogInfo("Book update successful");
@@ -115,7 +114,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -145,7 +144,7 @@ namespace BookStoreAPI.Controllers
 
                 if (!isCreationSuccessful)
                 {
-                    return ShowInternalServerError("Book create failed", _logger);
+                    return ShowInternalServerError("Book create failed");
                 }
 
                 _logger.LogInfo("Book successfully created");
@@ -154,7 +153,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -186,7 +185,7 @@ namespace BookStoreAPI.Controllers
 
                 if (!isDeleteSuccessful)
                 {
-                    return ShowInternalServerError("Book Delete failed", _logger);
+                    return ShowInternalServerError("Book Delete failed");
                 }
 
                 _logger.LogInfo($"Book id {id} succcessfully deleted");
@@ -195,7 +194,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
 
         }

@@ -19,13 +19,11 @@ namespace BookStoreAPI.Controllers
     public class AuthorsController : ApplicationController
     {
         private readonly IAuthorRepository _authorRepository;
-        private readonly ILoggerService _logger;
 
         public AuthorsController(IAuthorRepository authorRepository,
-            ILoggerService logger)
+            ILoggerService logger):base(logger)
         {
             _authorRepository = authorRepository;
-            _logger = logger;
         }
 
         /// <summary>
@@ -46,7 +44,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -83,7 +81,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -120,8 +118,7 @@ namespace BookStoreAPI.Controllers
                 var isInsertionSuccessful = await _authorRepository.Create(author);
                 if(!isInsertionSuccessful)
                 {
-                    return ShowInternalServerError("Author creation failed", 
-                        _logger);
+                    return ShowInternalServerError("Author creation failed");
                 }
 
                 _logger.LogInfo("Author successfully created");
@@ -130,7 +127,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -158,7 +155,7 @@ namespace BookStoreAPI.Controllers
                 var isUpdateSusscessful = await _authorRepository.Update(author);
                 if(!isUpdateSusscessful)
                 {
-                    return ShowInternalServerError("Author update failed", _logger);
+                    return ShowInternalServerError("Author update failed");
                 }
 
                 _logger.LogInfo("Author Update successful");
@@ -167,7 +164,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
 
@@ -196,7 +193,7 @@ namespace BookStoreAPI.Controllers
 
                 if (!isDeleteSuccessful)
                 {
-                    return ShowInternalServerError("Author Delete failed", _logger);
+                    return ShowInternalServerError("Author Delete failed");
                 }
 
                 _logger.LogInfo($"Author id {id} succcessfully deleted");
@@ -206,7 +203,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex);
             }
         }
     }
