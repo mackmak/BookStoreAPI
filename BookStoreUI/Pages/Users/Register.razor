@@ -1,0 +1,75 @@
+﻿@page "/Register"
+
+@using BookStoreUI.Models
+@using BookStoreUI.Contracts
+
+@inject IAuthenticationRepository _authenticationRepository
+@inject NavigationManager _navigationManager
+
+<div class="card">
+    <h3 class="card-title">
+        Register Now
+    </h3>
+
+    @if (registrationFailed)
+    {
+        <div class="alert alert-danger">
+            <p>
+                Registration failed. Please try again.
+            </p>
+        </div>
+    }
+
+
+    <div class="card-body">
+        <EditForm Model="registrationModel" OnValidSubmit="HandleRegistration">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <InputText Id="email" class="form-control"
+                           @bind-Value="registrationModel.EmailAddress" />
+                <ValidationMessage For="@(() => registrationModel.EmailAddress)" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password"
+                           class="form-control" @bind-Value="registrationModel.Password" />
+                <ValidationMessage For="@(() => registrationModel.Password)" />
+            </div>
+
+            <div class="form-group">
+                <label for="confirmpassword">Confirm Password</label>
+                <InputText Id="confirmpassword" type="password"
+                           class="form-control" @bind-Value="registrationModel.ConfirmPassword" />
+                <ValidationMessage For="@(() => registrationModel.ConfirmPassword)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private RegistrationModel registrationModel = new RegistrationModel();
+    bool registrationFailed = false;
+
+    private async Task HandleRegistration()
+    {
+        var response = await _authenticationRepository.Register(registrationModel);
+
+
+
+        if (response)
+        {
+            _navigationManager.NavigateTo("/login");
+        }
+        else
+        {
+            registrationFailed = true;
+        }
+
+    }
+}

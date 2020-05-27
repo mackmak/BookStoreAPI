@@ -19,7 +19,7 @@ namespace BookStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : ApplicationController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -37,36 +37,89 @@ namespace BookStoreAPI.Controllers
         }
 
         /// <summary>
+        /// Register a new user
+        /// </summary>
+        /// <param name="userDTO"></param>
+        /// <returns></returns>
+        [Route("register")]//to avoid endpoint name conflicts due to the same http verb
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody]UserDTO userDTO) 
+        {
+            try
+            {
+                var location = GetControllerActionNames();
+
+                var user = new IdentityUser
+                {
+                    Email = userDTO.EmailAddress,
+                    UserName = userDTO.EmailAddress
+                };
+
+                //creates a new user in the system
+                var identityResult = await _userManager.CreateAsync(user, userDTO.Password);
+
+                if(!identityResult.Succeeded)
+                {
+                    _logger.LogError($"{location}: {userDTO.EmailAddress} User registration attempt failed");
+
+                    var errorMessage = new StringBuilder();
+                    foreach (var error in identityResult.Errors)
+                    {
+                        //_logger.LogError($"{location}: {error.Code} {error.Description}");
+                        ShowInternalServerError($"{location}: {error.Code} {error.Description}",
+                            _logger);
+
+                        errorMessage.AppendLine($"{location}: {error.Code} {error.Description}");
+                    }
+
+                    return ValidationProblem(new ValidationProblemDetails() 
+                    { 
+                        Detail = errorMessage.ToString() 
+                    });
+                }
+
+                return Ok(new { identityResult.Succeeded });
+            }
+            catch (Exception ex)
+            {
+                return ShowInternalServerError(ex, _logger);
+            }
+        }
+
+        /// <summary>
         /// UserLogin Endpoint
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [Route("login")]//to avoid endpoint name conflicts due to the same http verb
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserDTO user)
         {
-            var location = GetControllerActionNames();
             try
             {
-                _logger.LogInfo($"{location}: Login attempt from user {user.UserName}");
-                var signIn = await _signInManager.PasswordSignInAsync(user.UserName,
+                var location = GetControllerActionNames();
+
+                _logger.LogInfo($"{location}: Login attempt from user {user.EmailAddress}");
+                var signIn = await _signInManager.PasswordSignInAsync(user.EmailAddress,
                 user.Password, false, false);
 
                 if (signIn != null && signIn.Succeeded)
                 {
-                    _logger.LogInfo($"{location} : {user.UserName} successfully authenticated");
-                    var loggedInUser = await _userManager.FindByNameAsync(user.UserName);
+                    _logger.LogInfo($"{location} : {user.EmailAddress} successfully authenticated");
+                    var loggedInUser = await _userManager.FindByNameAsync(user.EmailAddress);
                     var generatedToken = await GenerateJSONWebToken(loggedInUser);
 
                     return Accepted("User logged in", new { token = generatedToken});
                 }
 
-                _logger.LogInfo($"{location} : {user.UserName} Not Authenticated");
+                _logger.LogInfo($"{location} : {user.EmailAddress} Not Authenticated");
                 return Unauthorized(user);
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
 

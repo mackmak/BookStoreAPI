@@ -14,7 +14,10 @@ namespace BookStoreUI.Services
     public class BaseRepository<T> : IBaseRepository<T> where T : class
     {
         private readonly IHttpClientFactory _client;
-
+        public BaseRepository(IHttpClientFactory client)
+        {
+            _client = client;
+        }
         public async Task<bool> Create(string url, T entity)
         {
 

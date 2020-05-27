@@ -9,7 +9,7 @@ using BookStoreAPI.Contracts;
 
 namespace BookStoreAPI.Controllers
 {
-    public class Utils : ControllerBase
+    public class ApplicationController : ControllerBase
     {
 
         public const string strAdmin = "Administrator";

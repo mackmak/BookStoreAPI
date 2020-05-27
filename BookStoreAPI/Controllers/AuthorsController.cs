@@ -16,7 +16,7 @@ namespace BookStoreAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public class AuthorsController : ControllerBase
+    public class AuthorsController : ApplicationController
     {
         private readonly IAuthorRepository _authorRepository;
         private readonly ILoggerService _logger;
@@ -46,7 +46,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
 
@@ -83,7 +83,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
 
@@ -99,7 +99,7 @@ namespace BookStoreAPI.Controllers
         /// <param name="author"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = Utils.strAdmin)]
+        [Authorize(Roles = strAdmin)]
         public async Task<IActionResult> Create([FromBody] Author author)
         {
             try
@@ -120,7 +120,7 @@ namespace BookStoreAPI.Controllers
                 var isInsertionSuccessful = await _authorRepository.Create(author);
                 if(!isInsertionSuccessful)
                 {
-                    return new Utils().ShowInternalServerError("Author creation failed", 
+                    return ShowInternalServerError("Author creation failed", 
                         _logger);
                 }
 
@@ -130,14 +130,14 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
 
 
         [HttpPut]
-        [Authorize(Roles = Utils.strAdmin)]
-        [Authorize(Roles = Utils.strCustomer)]
+        [Authorize(Roles = strAdmin)]
+        [Authorize(Roles = strCustomer)]
         public async Task<IActionResult> Update([FromBody] Author author)
         {
             try
@@ -158,7 +158,7 @@ namespace BookStoreAPI.Controllers
                 var isUpdateSusscessful = await _authorRepository.Update(author);
                 if(!isUpdateSusscessful)
                 {
-                    return new Utils().ShowInternalServerError("Author update failed", _logger);
+                    return ShowInternalServerError("Author update failed", _logger);
                 }
 
                 _logger.LogInfo("Author Update successful");
@@ -167,12 +167,12 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = Utils.strAdmin)]
+        [Authorize(Roles = strAdmin)]
         public async Task<IActionResult> Delete(int id)
         {
             try
@@ -196,7 +196,7 @@ namespace BookStoreAPI.Controllers
 
                 if (!isDeleteSuccessful)
                 {
-                    return new Utils().ShowInternalServerError("Author Delete failed", _logger);
+                    return ShowInternalServerError("Author Delete failed", _logger);
                 }
 
                 _logger.LogInfo($"Author id {id} succcessfully deleted");
@@ -206,7 +206,7 @@ namespace BookStoreAPI.Controllers
             }
             catch (Exception ex)
             {
-                return new Utils().ShowInternalServerError(ex, _logger);
+                return ShowInternalServerError(ex, _logger);
             }
         }
     }
