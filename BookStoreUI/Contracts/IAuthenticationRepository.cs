@@ -1,4 +1,5 @@
-﻿using BookStoreUI.Models;
+﻿using Blazored.LocalStorage;
+using BookStoreUI.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,11 @@ namespace BookStoreUI.Contracts
 {
     public interface IAuthenticationRepository
     {
-        public Task<bool> Register(RegistrationModel user);
+
+         Task<bool> Register(RegistrationModel user);
+
+         Task<bool> Login(LoginModel user);
+
+         Task Logout();
     }
 }

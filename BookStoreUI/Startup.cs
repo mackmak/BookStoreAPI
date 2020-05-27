@@ -12,6 +12,8 @@ using Microsoft.Extensions.Hosting;
 using BookStoreUI.Data;
 using BookStoreUI.Contracts;
 using BookStoreUI.Services;
+using Blazored.LocalStorage;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BookStoreUI
 {
@@ -32,7 +34,9 @@ namespace BookStoreUI
             services.AddServerSideBlazor();
 
             //added manually
+            services.AddBlazoredLocalStorage();
             services.AddHttpClient();
+            services.AddScoped<JwtSecurityTokenHandler>();
             services.AddTransient<IAuthenticationRepository, AuthenticationRepository>();
 
         }
