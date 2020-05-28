@@ -39,41 +39,46 @@ namespace BookStoreUI.Services
 
         public async Task<bool> Login(LoginModel user)
         {
-            var url = Endpoints.LoginEndpoint;
-
-            //settiing up Login request 
-            var request = new HttpRequestMessage(HttpMethod.Post, url);
-
-            //assigning user info to the request
-            request.Content = new StringContent(JsonConvert.SerializeObject(user),
-                Encoding.UTF8, _applicationTypeJson);
-
-            var client = _client.CreateClient();
-
-            //response based on request result
-            HttpResponseMessage httpResponse = await client.SendAsync(request);
-
-            if (!httpResponse.IsSuccessStatusCode)
+            try
             {
-                return false;
+                var url = Endpoints.LoginEndpoint;
+
+                //settiing up Login request 
+                var request = new HttpRequestMessage(HttpMethod.Post, url);
+
+                //assigning user info to the request
+                request.Content = new StringContent(JsonConvert.SerializeObject(user),
+                    Encoding.UTF8, _applicationTypeJson);
+
+                var client = _client.CreateClient();
+
+                //response based on request result
+                HttpResponseMessage httpResponse = await client.SendAsync(request);
+
+                if (!httpResponse.IsSuccessStatusCode)
+                {
+                    return false;
+                }
+
+                var content = await httpResponse.Content.ReadAsStringAsync();
+                var token = JsonConvert.DeserializeObject<TokenResponse>(content);
+
+                //Store Token
+                await _localStorage.SetItemAsync(tokenName, token.Token);
+
+                //Change auth state
+                await ((ApiAuthenticationStateProvider)_authenticationStateProvider)
+                .Login();
+
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("bearer", token.Token);
+                return true;
             }
+            catch (Exception ex)
+            {
 
-            var content = await httpResponse.Content.ReadAsStringAsync();
-            var token = JsonConvert.DeserializeObject<string>(content);
-
-            //Store Token
-            await _localStorage.SetItemAsync(tokenName, token);
-
-            //Change auth state
-            var apiAuthenticationStateProvider =
-               (ApiAuthenticationStateProvider)_authenticationStateProvider;
-
-            //Log user in
-            await apiAuthenticationStateProvider.Login();
-
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("bearer", token);
-            return true;
+                throw;
+            }
 
 
         }

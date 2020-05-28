@@ -10,8 +10,4 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.6.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Pages\Users\" />
-  </ItemGroup>
-
 </Project>

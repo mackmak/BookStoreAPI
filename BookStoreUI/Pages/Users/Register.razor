@@ -11,7 +11,7 @@
         Register Now
     </h3>
 
-    @if (registrationFailed)
+    @if (response == false)
     {
         <div class="alert alert-danger">
             <p>
@@ -47,18 +47,18 @@
                 <ValidationMessage For="@(() => registrationModel.ConfirmPassword)" />
             </div>
 
-            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
         </EditForm>
     </div>
 </div>
 
 @code {
     private RegistrationModel registrationModel = new RegistrationModel();
-    bool registrationFailed = false;
+    bool response = true;
 
     private async Task HandleRegistration()
     {
-        var response = await _authenticationRepository.Register(registrationModel);
+        response = await _authenticationRepository.Register(registrationModel);
 
 
 
@@ -66,10 +66,7 @@
         {
             _navigationManager.NavigateTo("/login");
         }
-        else
-        {
-            registrationFailed = true;
-        }
+        
 
     }
 }

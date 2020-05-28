@@ -1,0 +1,66 @@
+﻿@page "/login"
+
+@using BookStoreUI.Models
+@using BookStoreUI.Contracts
+
+@inject IAuthenticationRepository _authenticationRepository
+@inject NavigationManager _navigationManager
+
+<div class="card">
+    <h3 class="card-title">
+        Login
+    </h3>
+
+    @if (response == false)
+    {
+        <div class="alert alert-danger">
+            <p>
+                Login failed. Please try again.
+            </p>
+        </div>
+    }
+
+
+    <div class="card-body">
+        <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <InputText Id="email" class="form-control"
+                           @bind-Value="loginModel.EmailAddress" />
+                <ValidationMessage For="@(() => loginModel.EmailAddress)" />
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <InputText Id="password" type="password"
+                           class="form-control" @bind-Value="loginModel.Password" />
+                <ValidationMessage For="@(() => loginModel.Password)" />
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+
+    bool response = true;
+    private async Task HandleLogin()
+    {
+         response = await _authenticationRepository.Login(loginModel);
+
+
+
+        if (response)
+        {
+            _navigationManager.NavigateTo("/");
+        }
+       
+
+    }
+}
+

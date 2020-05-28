@@ -15,7 +15,7 @@ namespace BookStoreUI.Providers
         private readonly ILocalStorageService _localStorage;
         private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        private static string tokenName = "authToken";
+        private string tokenName = "authToken";
 
 
         public ApiAuthenticationStateProvider(ILocalStorageService localStorage,
@@ -80,6 +80,7 @@ namespace BookStoreUI.Providers
             var authState = Task.FromResult(new AuthenticationState(user));
 
             NotifyAuthenticationStateChanged(authState);
+
         }
 
         public void Logout()
