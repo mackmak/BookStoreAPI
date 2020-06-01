@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BookStoreAPI.Contracts
+namespace Utils.Contracts
 {
     public interface ILoggerService
     {

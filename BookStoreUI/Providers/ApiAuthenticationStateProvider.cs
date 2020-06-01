@@ -15,7 +15,7 @@ namespace BookStoreUI.Providers
         private readonly ILocalStorageService _localStorage;
         private readonly JwtSecurityTokenHandler _tokenHandler;
 
-        private string tokenName = "authToken";
+        private static string tokenName = "authToken";
 
 
         public ApiAuthenticationStateProvider(ILocalStorageService localStorage,
@@ -31,6 +31,7 @@ namespace BookStoreUI.Providers
                         new ClaimsPrincipal(
                             new ClaimsIdentity()));
         }
+
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
@@ -60,7 +61,7 @@ namespace BookStoreUI.Providers
                 return new AuthenticationState(user);
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return GenerateNewToken();
             }

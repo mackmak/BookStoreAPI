@@ -18,84 +18,56 @@ namespace BookStoreAPI.Models
             await SeedUsers(userManager);
         }
 
-        private async static Task SeedUsers(UserManager<IdentityUser> userManager)
+        private async static Task CreateUser(UserManager<IdentityUser> userManager, 
+            string userName, string email, string password)
         {
-            //if there's no admin user
-            if (await userManager.FindByEmailAsync("admin@bookstore.com") == null)
+            //1 - if user doesnt exist
+            if (await userManager.FindByEmailAsync(email) == null)
             {
                 var user = new IdentityUser
                 {
-                    UserName = "admin",
-                    Email = "admin@bookstore.com"
+                    UserName = userName,
+                    Email = email
                 };
 
-                //create one
-                var result = await userManager.CreateAsync(user, "P@ssword1");
+                //2 - create one
+                var result = await userManager.CreateAsync(user, password);
 
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, strAdmin);
                 }
             }
+        }
 
-            if (await userManager.FindByEmailAsync("customer1@gmail.com") == null)
+        private async static Task SeedUsers(UserManager<IdentityUser> userManager)
+        {
+            await CreateUser(userManager, "admin", "admin@bookstore.com", "P@ssword1");
+            await CreateUser(userManager, "customer1", "customer1@gmail.com", "P@ssword1");
+            await CreateUser(userManager, "customer2", "customer2@gmail.com", "P@ssword1");
+        }
+
+        private async static Task CreateRole(RoleManager<IdentityRole> roleManager,
+            string roleName)
+        {
+            //if role doesnt exist
+            if (!await roleManager.RoleExistsAsync(roleName))
             {
-                var user = new IdentityUser
+                var role = new IdentityRole
                 {
-                    UserName = "customer1",
-                    Email = "customer1@gmail.com"
+                    Name = roleName
                 };
 
-                var result = await userManager.CreateAsync(user, "P@ssword1");
-
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, strCustomer);
-                }
-            }
-
-            if (await userManager.FindByEmailAsync("customer2@gmail.com") == null)
-            {
-                var user = new IdentityUser
-                {
-                    UserName = "customer2",
-                    Email = "customer2@gmail.com"
-                };
-
-                var result = await userManager.CreateAsync(user, "P@ssword1");
-
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, strCustomer);
-                }
+                //create one
+                await roleManager.CreateAsync(role);
             }
         }
 
         private async static Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
 
-            //if there's no admin role
-            if (! await roleManager.RoleExistsAsync(strAdmin))
-            {
-                var role = new IdentityRole
-                {
-                    Name = strAdmin
-                };
-
-                //create one
-                await roleManager.CreateAsync(role);
-            }
-
-            if (!await roleManager.RoleExistsAsync(strCustomer))
-            {
-                var role = new IdentityRole
-                {
-                    Name = strCustomer
-                };
-
-                await roleManager.CreateAsync(role);
-            }
-
+            await CreateRole(roleManager, strAdmin);
+            await CreateRole(roleManager, strCustomer);
         }
     }
 }

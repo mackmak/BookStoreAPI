@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using BookStoreAPI.Contracts;
+using Utils.Contracts;
 
 namespace BookStoreAPI.Controllers
 {

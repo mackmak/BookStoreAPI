@@ -47,4 +47,8 @@
     <Folder Include="Models\Identity\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj" />
+  </ItemGroup>
+
 </Project>

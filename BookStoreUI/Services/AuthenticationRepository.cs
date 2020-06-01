@@ -16,10 +16,12 @@ using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using Utils.Contracts;
 
 namespace BookStoreUI.Services
 {
-    public class AuthenticationRepository : IAuthenticationRepository
+    public class AuthenticationRepository : AuthenticationBaseRepository, 
+        IAuthenticationRepository
     {
         private readonly IHttpClientFactory _client;
         private static readonly string _applicationTypeJson = "application/json";
@@ -30,7 +32,8 @@ namespace BookStoreUI.Services
 
         public AuthenticationRepository(IHttpClientFactory client,
             ILocalStorageService localStorage,
-            AuthenticationStateProvider authenticationStateProvider)
+            AuthenticationStateProvider authenticationStateProvider,
+            ILoggerService logger):base(logger)
         {
             _client = client;
             _localStorage = localStorage;
@@ -43,7 +46,7 @@ namespace BookStoreUI.Services
             {
                 var url = Endpoints.LoginEndpoint;
 
-                //settiing up Login request 
+                //setting up Login request 
                 var request = new HttpRequestMessage(HttpMethod.Post, url);
 
                 //assigning user info to the request
@@ -76,44 +79,58 @@ namespace BookStoreUI.Services
             }
             catch (Exception ex)
             {
-
-                throw;
+                LogError(ex);
             }
 
-
+            return false;
         }
 
         public async Task Logout()
         {
-            //removing token from storage
-            await _localStorage.RemoveItemAsync(tokenName);
+            try
+            {
+                //removing token from storage
+                await _localStorage.RemoveItemAsync(tokenName);
 
 
-            var apiAuthenticationStateProvider =
-               (ApiAuthenticationStateProvider)_authenticationStateProvider;
+                var apiAuthenticationStateProvider =
+                   (ApiAuthenticationStateProvider)_authenticationStateProvider;
 
-            apiAuthenticationStateProvider.Logout();
+                apiAuthenticationStateProvider.Logout();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex); 
+            }
         }
 
         public async Task<bool> Register(RegistrationModel user)
         {
-            var url = Endpoints.RegisterEndpoint;
+            try
+            {
+                var url = Endpoints.RegisterEndpoint;
 
-            //setting up register request 
-            var request = new HttpRequestMessage(HttpMethod.Post,
-                url);
+                //setting up register request 
+                var request = new HttpRequestMessage(HttpMethod.Post,
+                    url);
 
-            //assigning user information to the request
-            request.Content = new StringContent(JsonConvert.SerializeObject(user),
-                Encoding.UTF8, _applicationTypeJson);
+                //assigning user information to the request
+                request.Content = new StringContent(JsonConvert.SerializeObject(user),
+                    Encoding.UTF8, _applicationTypeJson);
 
-            var client = _client.CreateClient();
+                var client = _client.CreateClient();
 
-            //response based on request result
-            HttpResponseMessage httpResponse = await client.SendAsync(request);
+                //response based on request result
+                HttpResponseMessage httpResponse = await client.SendAsync(request);
 
-            return httpResponse.IsSuccessStatusCode;
+                return httpResponse.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+            }
 
+            return false;
         }
     }
 }
