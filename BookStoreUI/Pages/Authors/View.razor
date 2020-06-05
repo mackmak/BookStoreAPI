@@ -1,0 +1,36 @@
+﻿@page "/authors/view/{Id}"
+
+
+@inject IAuthorRepository _authorRepository
+@inject NavigationManager _navigationManager
+
+
+@if (Model == null)
+{
+    <LoadingMessage Message="Loading Author Details..." />
+}
+else
+{
+    <div class="col-md-4">
+        <h4>Author Details</h4>
+
+        <DisplayAuthor Model="Model" />
+
+        <DisplayAuthorDetails Model="Model" />
+    </div>
+}
+
+<BackToListShared NavigationManager="_navigationManager" Url="/authors/" />
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Author Model = new Author();
+
+    protected async override Task OnInitializedAsync()
+    {
+        Model = await _authorRepository.Get(Endpoints.AuthorsEndpoint, Convert.ToInt32(Id));
+    }
+
+}

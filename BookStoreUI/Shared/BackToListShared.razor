@@ -1,0 +1,17 @@
+﻿<button @onclick="BackToList" class="btn btn-outline-secondary">
+    <span class="oi oi-media-skip-backward"></span>
+    Back To List
+</button>
+
+@code {
+    [Parameter]
+    public NavigationManager NavigationManager { get; set; }
+
+    [Parameter]
+    public string Url { get; set; }
+
+    private void BackToList()
+    {
+        NavigationManager.NavigateTo(Url);
+    }
+}

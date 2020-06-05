@@ -16,6 +16,7 @@ namespace BookStoreAPI.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public class AuthorsController : ApplicationController
     {
@@ -31,7 +32,8 @@ namespace BookStoreAPI.Controllers
         /// Gets All authors
         /// </summary>
         [HttpGet]
-        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAuthors()
         {
             try
@@ -55,7 +57,6 @@ namespace BookStoreAPI.Controllers
         /// <param name="id"></param>
         /// <returns>author</returns>
         [HttpGet("{id}")] 
-        [AllowAnonymous]
         public async Task<IActionResult> GetAuthorById(int id)
         {
             try

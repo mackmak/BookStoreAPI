@@ -10,7 +10,9 @@ namespace BookStoreUI.Contracts
         Task<T> Get(string url, int id);
         Task<IList<T>> Get(string url);
         Task<bool> Create(string url, T entity);
-        Task<bool> Update(string url, T entity);
+        Task<bool> Update(string url, T entity, int id);
         Task<bool> Delete(string url, int id);
+
+        public void LogError(Exception ex);
     }
 }

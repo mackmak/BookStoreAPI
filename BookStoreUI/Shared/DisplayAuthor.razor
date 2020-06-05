@@ -1,0 +1,22 @@
+﻿<div>
+    <table class="table table-responsive">
+        <tr>
+            <td>First Name</td>
+            <td>@Model.FirstName</td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td>@Model.LastName</td>
+        </tr>
+        <tr>
+            <td>Biography</td>
+            <td>@Model.Bio</td>
+        </tr>
+
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public Author Model { get; set; }
+}

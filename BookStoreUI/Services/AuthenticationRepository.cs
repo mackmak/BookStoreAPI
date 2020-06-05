@@ -55,6 +55,7 @@ namespace BookStoreUI.Services
 
                 var client = _client.CreateClient();
 
+
                 //response based on request result
                 HttpResponseMessage httpResponse = await client.SendAsync(request);
 
@@ -73,8 +74,10 @@ namespace BookStoreUI.Services
                 await ((ApiAuthenticationStateProvider)_authenticationStateProvider)
                 .Login();
 
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("bearer", token.Token);
+                /*client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("bearer", token.Token);*/
+
+
                 return true;
             }
             catch (Exception ex)
