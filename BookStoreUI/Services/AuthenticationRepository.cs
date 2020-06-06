@@ -111,11 +111,10 @@ namespace BookStoreUI.Services
         {
             try
             {
-                var url = Endpoints.RegisterEndpoint;
 
                 //setting up register request 
                 var request = new HttpRequestMessage(HttpMethod.Post,
-                    url);
+                    Endpoints.RegisterEndpoint);
 
                 //assigning user information to the request
                 request.Content = new StringContent(JsonConvert.SerializeObject(user),

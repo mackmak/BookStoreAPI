@@ -1,25 +1,23 @@
-﻿using System;
+﻿using BookStoreAPI.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using BookStoreAPI.Contracts;
-using BookStoreAPI.Models.DTOs;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Utils.Contracts;
 
 namespace BookStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class UsersController : ApplicationController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
@@ -38,35 +36,34 @@ namespace BookStoreAPI.Controllers
         /// <summary>
         /// Register a new user
         /// </summary>
-        /// <param name="userDTO"></param>
+        /// <param name="requestUser"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
         [Route("register")]//to avoid endpoint name conflicts due to the same http verb
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody]UserDTO userDTO) 
+        public async Task<IActionResult> Register([FromBody]User requestUser) 
         {
             try
             {
                 var location = GetControllerActionNames();
 
-                var user = new IdentityUser
+                var newUser = new IdentityUser
                 {
-                    Email = userDTO.EmailAddress,
-                    UserName = userDTO.EmailAddress
+                    Email = requestUser.EmailAddress,
+                    UserName = requestUser.EmailAddress
                 };
 
                 //creates a new user in the system
-                var identityResult = await _userManager.CreateAsync(user, userDTO.Password);
+                var result = await _userManager.CreateAsync(newUser, requestUser.Password);
 
-                if(!identityResult.Succeeded)
+                if(!result.Succeeded)
                 {
-                    _logger.LogError($"{location}: {userDTO.EmailAddress} User registration attempt failed");
+                    _logger.LogError($"{location}: {requestUser.EmailAddress} User registration attempt failed");
 
                     var errorMessage = new StringBuilder();
 
-                    foreach (var error in identityResult.Errors)
+                    foreach (var error in result.Errors)
                     {
-                        //_logger.LogError($"{location}: {error.Code} {error.Description}");
                         ShowInternalServerError($"{location}: {error.Code} {error.Description}");
 
                         errorMessage.AppendLine($"{location}: {error.Code} {error.Description}");
@@ -78,7 +75,9 @@ namespace BookStoreAPI.Controllers
                     });
                 }
 
-                return Ok(new { identityResult.Succeeded });
+                await _userManager.AddToRoleAsync(newUser, "Administrator");//Customer
+
+                return Created("login", new { result.Succeeded });
             }
             catch (Exception ex)
             {
@@ -92,9 +91,8 @@ namespace BookStoreAPI.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [Route("login")]//to avoid endpoint name conflicts due to the same http verb
-        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserDTO user)
+        public async Task<IActionResult> Login([FromBody] User user)
         {
             try
             {

@@ -11,6 +11,7 @@ namespace BookStoreAPI.Models
         private static string strAdmin = "Administrator";
         private static string strCustomer = "Customer";
 
+
         public async static Task Seed(UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager)
         {
@@ -19,7 +20,7 @@ namespace BookStoreAPI.Models
         }
 
         private async static Task CreateUser(UserManager<IdentityUser> userManager, 
-            string userName, string email, string password)
+            string userName, string email, string password, string role)
         {
             //1 - if user doesnt exist
             if (await userManager.FindByEmailAsync(email) == null)
@@ -35,16 +36,16 @@ namespace BookStoreAPI.Models
 
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(user, strAdmin);
+                    await userManager.AddToRoleAsync(user, role);
                 }
             }
         }
 
         private async static Task SeedUsers(UserManager<IdentityUser> userManager)
         {
-            await CreateUser(userManager, "admin", "admin@bookstore.com", "P@ssword1");
-            await CreateUser(userManager, "customer1", "customer1@gmail.com", "P@ssword1");
-            await CreateUser(userManager, "customer2", "customer2@gmail.com", "P@ssword1");
+            await CreateUser(userManager, "admin", "admin@bookstore.com", "P@ssword1", strAdmin);
+            await CreateUser(userManager, "customer1", "customer1@gmail.com", "P@ssword1", strCustomer);
+            await CreateUser(userManager, "customer2", "customer2@gmail.com", "P@ssword1", strCustomer);
         }
 
         private async static Task CreateRole(RoleManager<IdentityRole> roleManager,

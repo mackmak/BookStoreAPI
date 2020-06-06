@@ -76,14 +76,15 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:BookStoreAPI.Controllers.UsersController.Register(BookStoreAPI.Models.DTOs.UserDTO)">
+        <member name="M:BookStoreAPI.Controllers.UsersController.Register(BookStoreAPI.Models.User)">
             <summary>
             Register a new user
             </summary>
-            <param name="userDTO"></param>
+            <param name="requestUser"></param>
+            <param name="user"></param>
             <returns></returns>
         </member>
-        <member name="M:BookStoreAPI.Controllers.UsersController.Login(BookStoreAPI.Models.DTOs.UserDTO)">
+        <member name="M:BookStoreAPI.Controllers.UsersController.Login(BookStoreAPI.Models.User)">
             <summary>
             UserLogin Endpoint
             </summary>

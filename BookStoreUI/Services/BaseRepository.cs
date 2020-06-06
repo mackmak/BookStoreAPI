@@ -171,7 +171,7 @@ namespace BookStoreUI.Services
         }
 
 
-        public async Task<bool> Update(string url, T entity, int id)
+        public async Task<bool> Update(string url, [FromBody]T entity, int id)
         {
             try
             {
@@ -198,6 +198,7 @@ namespace BookStoreUI.Services
                 {
                     return true;
                 }
+
             }
             catch (Exception ex)
             {

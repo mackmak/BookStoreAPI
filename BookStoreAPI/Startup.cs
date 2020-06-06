@@ -132,7 +132,7 @@ namespace BookStoreAPI
 
             app.UseCors("CorsPolicy");
 
-            SeedData.Seed(userManager, roleManager).Wait();
+            //SeedData.Seed(userManager, roleManager).Wait();
 
             app.UseRouting();
 
